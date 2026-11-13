@@ -56,6 +56,23 @@ while True:
 #打印完整响应
 print("\n\n\n\n\n完整响应")
 print(response.decode("utf-8", errors="replace"))
+
+#T2：对HTTP响应头解析 分离header和body,这次的response是完整响应，所以不用判断
+header, body = response.split(b"\r\n\r\n", 1)
+
+#提取状态码
+status_line = header.split(b"\r\n", 1)[0]
+status_code = int(status_line.split()[1])
+
+print("HTTP状态码: ", status_code)
+
+#打印响应头
+print(header.decode("utf-8", errors="replace"))
+#保存正文
+with open("index.html", "wb") as f:
+    f.write(body)
+print("网页正文保存成功")
+
 #关闭socket连接
 s.close()
 print("Socket连接已关闭")
