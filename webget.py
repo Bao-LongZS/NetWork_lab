@@ -1,9 +1,29 @@
-import socket 
+import socket
+import sys
+
+#获取命令行参数
+if len(sys.argv) < 3 or len(sys.argv) > 4:
+    print("用法: python3 webget.py host path [port]")
+    sys.exit(1)
+
+#获取目标主机名和访问路径
+host = sys.argv[1]
+path = sys.argv[2]
+
+#获取端口
+if len(sys.argv) == 4:
+    port = int(sys.argv[3])
+else:
+    port = 80
+
+#创建套接字 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.settimeout(10)
-s.connect(("www.bjfu.edu.cn", 80))
+#不写死目标主机名和端口
+s.connect((host, port))
 
-request = (b"GET / HTTP/1.1\r\n" b"Host: www.bjfu.edu.cn\r\n" b"Connection: close\r\n" b"\r\n")
+#设置请求字段
+request = (f"GET {path} HTTP/1.1\r\n" f"Host: {host}\r\n" f"Connection: close\r\n" "\r\n").encode()
 
 #发送请求
 s.sendall(request)
@@ -76,3 +96,4 @@ print("网页正文保存成功")
 #关闭socket连接
 s.close()
 print("Socket连接已关闭")
+
